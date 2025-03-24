@@ -8,7 +8,7 @@ class user(models.Model):
 
 # Create your models here.
 class chatHistory(models.Model):
-    user = models.CharField(User, ondelete=models.CASCADE, related_name="chatHistory")
+    user = models.CharField(User)
     message = models.TextField()
     is_user_message = models.BooleanField()
     timestamp = models.DateTimeField(auto_now_add=True)
