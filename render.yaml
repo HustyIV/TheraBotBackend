@@ -1,5 +1,5 @@
 databases:
-  - name: mysitedb
+  - name: therabotdb
     plan: free
     databaseName: mysite
     user: mysite
@@ -7,14 +7,14 @@ databases:
 services:
   - type: web
     plan: free
-    name: mysite
+    name: TheraBotHutsy
     runtime: python
     buildCommand: "./build.sh"
     startCommand: "python -m gunicorn Therabot.asgi:application -k uvicorn.workers.UvicornWorker"
     envVars:
       - key: DATABASE_URL
         fromDatabase:
-          name: mysitedb
+          name: therabotdb
           property: connectionString
       - key: SECRET_KEY
         generateValue: true
