@@ -30,7 +30,9 @@ SECRET_KEY = 'django-insecure-c%tabp^$(#m5q#+u!a&czvl3i0lp$(g7y7=$*o&88i+#=6(fnt
 DEBUG = True
 
 ALLOWED_HOSTS = [
-    'https://therabothutsy.onrender.com',
+    'therabothutsy.onrender.com',
+    'localhost',
+    '127.0.0.1',
 ]
 
 CORS_ALLOW_ALL_ORIGINS = True
