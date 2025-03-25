@@ -1,116 +1,110 @@
-# **API Endpoint Guide: Conversation History**  
-**Endpoint:** `GET /api/conversations/`  
-**Authentication:** None (`AllowAny`)  
+# **TheraBot API Documentation**  
+**For Mobile Developers**  
 
-This endpoint retrieves all conversations sorted by most recent first.  
+This guide explains how to integrate with the TheraBot backend API, which provides AI-powered therapy conversations.  
 
 ---
 
-## **📌 Quick Start**
-### **1. Base URL**  
+## **📌 Base URL**  
 ```
-https://your-api-domain.com/api/conversations/
-```
+https://therabothutsy.onrender.com/ 
+```  
 
-### **2. Request Example**
-```bash
-curl -X GET "https://your-api-domain.com/api/conversations/" \
--H "Content-Type: application/json"
-```
+---
 
-### **3. Expected Response (200 OK)**
+## **📝 API Endpoints**  
+
+### **1. 💬 Send a Message & Get AI Response**  
+**Endpoint:** `POST /chat/`  
+
+**Request:**  
+```json
+{
+    "message": "I've been feeling anxious lately"
+}
+```  
+
+**Response (Success):**  
+```json
+{
+    "response": "I'm sorry to hear that. Let's explore what might be causing this anxiety. Can you describe when these feelings typically occur?",
+    "conversation_id": 5
+}
+```  
+
+**Possible Errors:**  
+| Code | Reason |  
+|------|--------|  
+| `400` | Empty message |  
+| `401` | Invalid/missing Firebase token |  
+
+---
+
+### **2. 📜 Get Conversation History**  
+**Endpoint:** `GET /conversations/`  
+
+**Response:**  
 ```json
 [
     {
-        "id": 1,
-        "title": "Stress Management",
-        "created_at": "2025-03-25T10:00:00Z",
-        "is_active": true,
+        "id": 5,
+        "title": "Anxiety Discussion",
+        "created_at": "2023-11-20T14:30:00Z",
         "messages": [
             {
                 "text": "I've been feeling anxious",
                 "is_from_user": true,
-                "sent_at": "2025-03-25T10:05:00Z"
+                "sent_at": "2023-11-20T14:30:05Z"
             },
             {
-                "text": "Let's explore what might be causing this.",
+                "text": "I'm sorry to hear that...",
                 "is_from_user": false,
-                "sent_at": "2025-03-25T10:05:30Z"
+                "sent_at": "2023-11-20T14:30:07Z"
             }
         ]
     }
 ]
-```
+```  
+
+**Notes:**  
+- Returns conversations sorted by **newest first**  
+- Each conversation includes all messages in chronological order  
 
 ---
 
-## **🔍 Response Fields**
-| Field | Type | Description |
-|-------|------|-------------|
-| `id` | Integer | Unique conversation ID |
-| `title` | String | Auto-generated conversation title |
-| `created_at` | ISO-8601 | Conversation start time |
-| `is_active` | Boolean | `true` if ongoing |
-| `messages[]` | Array | List of messages |
-| → `text` | String | Message content |
-| → `is_from_user` | Boolean | `true` if sent by the user |
-| → `sent_at` | ISO-8601 | Timestamp |
+## **🔧 Testing the API**  
+
+### **1. Using Postman**  
+For `POST /chat/`, include JSON body with `message`  
+
+### **2. Using cURL**  
+```bash
+
+# Send a message
+curl -X POST https://therabothutsy.onrender.com/api/chat/ \
+-H "Content-Type: application/json" \
+-d '{"message":"Hello"}'
+```  
 
 ---
 
-## **⚠️ Error Cases**
-| Status Code | Response Body | Reason |
-|------------|---------------|--------|
-| `500 Server Error` | `{"detail": "Internal server error"}` | Database/backend issue |
+## **🛠️ Error Handling**  
+- **401 Unauthorized**: Invalid/missing Firebase token  
+- **400 Bad Request**: Missing/empty `message` in POST request  
+- **500 Server Error**: Contact backend team  
 
 ---
 
-## **🛠️ Integration Guide (Mobile)**
-### **Android (Kotlin)**
-```kotlin
-val retrofit = Retrofit.Builder()
-    .baseUrl("https://your-api-domain.com/")
-    .build()
+## **📱 Mobile Implementation Tips**  
 
-val api = retrofit.create(ApiService::class.java)
-val call = api.getConversations()
+## **🚀 Next Steps**  
+1. Integrate the `/chat/` endpoint for real-time messaging  
+2. Use `/conversations/` to display chat history  
+ 
 
-call.enqueue(object : Callback<List<Conversation>> {
-    override fun onResponse(call: Call<List<Conversation>>, response: Response<List<Conversation>>) {
-        if (response.isSuccessful) {
-            val conversations = response.body()
-            // Update UI
-        }
-    }
-    override fun onFailure(call: Call<List<Conversation>>, t: Throwable) {
-        // Handle error
-    }
-})
-```
+**Need Help?**  
+Contact: [christineoyiera51@gmail.com]  
 
----
+--- 
 
-## **🧪 Testing in Development**
-1. **Mock Data Response**  
-   If the backend is unavailable, mock the response:
-   ```json
-   [{"id": 1, "title": "Test", "is_active": true, "messages": []}]
-   ```
-
-2. **Error Simulation**  
-   Test error handling by temporarily changing the endpoint URL to an invalid path.
-
----
-
-## **📝 Notes for Developers**
-- **Pagination**: Currently returns all conversations. Contact backend if pagination is needed.
-- **Auto-Refresh**: Poll this endpoint every 60s if real-time updates are required.
-- **Filtering**: Use `?is_active=true` to fetch only ongoing conversations (if implemented).
-
-**Last Updated:** March 2025  
-
----
-
-**🔗 Backend Contact:** [christineoyiera51@gmail.com](mailto:your-email@domain.com)  
-
-Let me know what you'd like to add:
+**Last Updated**: March 2025
