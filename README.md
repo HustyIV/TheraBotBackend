@@ -1,106 +1,116 @@
-# Therabot Backend Development Documentation
+# **API Endpoint Guide: Conversation History**  
+**Endpoint:** `GET /api/conversations/`  
+**Authentication:** None (`AllowAny`)  
 
-This document outlines the steps to build the backend for Therabot, a mental health support application.
-
----
-
-## Step 1: Plan the Backend Architecture
-
-### Define the Scope
-- **Features**:
-  - Chatting with a chatbot (initial feature).
-  - API development using Django.
-- **Database Schema**:
-  - **Users**: Authentication using OAuth.
-  - **ChatHistory**: Stores conversations between users and chatbots.
-
-### API Endpoints
-- **Chat Interaction**: Endpoints for sending and retrieving messages.
+This endpoint retrieves all conversations sorted by most recent first.  
 
 ---
 
-## Step 2: Set Up the Development Environment
+## **📌 Quick Start**
+### **1. Base URL**  
+```
+https://your-api-domain.com/api/conversations/
+```
 
-1. **Project Setup**:
-   - Use Django to create the project structure.
-   - Install required dependencies listed in `requirements.txt`.
-2. **Version Control**:
-   - Initialize a Git repository and set up `.gitignore` for sensitive files and virtual environments.
+### **2. Request Example**
+```bash
+curl -X GET "https://your-api-domain.com/api/conversations/" \
+-H "Content-Type: application/json"
+```
 
----
-
-## Step 3: Build the Database
-
-1. **Database Choice**:
-   - Use PostgreSQL for production.
-2. **Define Relationships**:
-   - Design models for `Users` and `ChatHistory` with appropriate relationships.
-
----
-
-## Step 4: Implement User Authentication
-
-- Use OAuth for secure user authentication and authorization.
-
----
-
-## Step 5: Create API Endpoints
-
-1. **Define Routes**:
-   - Set up routes for chat interaction, mood tracking, journaling, and exercises.
-2. **Implement CRUD Operations**:
-   - **Chat**: Send and retrieve messages.
-   - **Mood Tracking**: Log and fetch mood data.
-   - **Journaling**: Save and retrieve journal entries.
-   - **Exercises**: Fetch exercise prompts and log completion.
-3. **Add Pagination and Filtering**:
-   - Implement pagination and filtering for endpoints returning large datasets (e.g., chat history).
-
----
-
-## Step 6: Integrate External APIs
-
-1. **Identify Required APIs**:
-   - Integrate APIs for mindfulness exercises.
-2. **Secure API Keys**:
-   - Store API keys securely using environment variables.
+### **3. Expected Response (200 OK)**
+```json
+[
+    {
+        "id": 1,
+        "title": "Stress Management",
+        "created_at": "2025-03-25T10:00:00Z",
+        "is_active": true,
+        "messages": [
+            {
+                "text": "I've been feeling anxious",
+                "is_from_user": true,
+                "sent_at": "2025-03-25T10:05:00Z"
+            },
+            {
+                "text": "Let's explore what might be causing this.",
+                "is_from_user": false,
+                "sent_at": "2025-03-25T10:05:30Z"
+            }
+        ]
+    }
+]
+```
 
 ---
 
-## Step 7: Test the Backend
-
-1. **Unit Testing**:
-   - Write tests for individual components (e.g., models, views).
-2. **Integration Testing**:
-   - Test interactions between components (e.g., API endpoints and database).
-
----
-
-## Step 8: Document the APIs
-
-- Use tools like Swagger or Postman to generate API documentation.
-
----
-
-## Step 9: Prep for Deployment
-
-1. **Set Up a Production Server**:
-   - Use a cloud platform (e.g., AWS, Heroku) for deployment.
-2. **Configure Settings**:
-   - Update settings for production (e.g., database, allowed hosts).
+## **🔍 Response Fields**
+| Field | Type | Description |
+|-------|------|-------------|
+| `id` | Integer | Unique conversation ID |
+| `title` | String | Auto-generated conversation title |
+| `created_at` | ISO-8601 | Conversation start time |
+| `is_active` | Boolean | `true` if ongoing |
+| `messages[]` | Array | List of messages |
+| → `text` | String | Message content |
+| → `is_from_user` | Boolean | `true` if sent by the user |
+| → `sent_at` | ISO-8601 | Timestamp |
 
 ---
 
-## Step 10: Deploy and Monitor
-
-1. **Deploy**:
-   - Push the application to the production server.
-2. **Monitor**:
-   - Use monitoring tools to track performance and errors.
+## **⚠️ Error Cases**
+| Status Code | Response Body | Reason |
+|------------|---------------|--------|
+| `500 Server Error` | `{"detail": "Internal server error"}` | Database/backend issue |
 
 ---
 
-## Additional Notes
+## **🛠️ Integration Guide (Mobile)**
+### **Android (Kotlin)**
+```kotlin
+val retrofit = Retrofit.Builder()
+    .baseUrl("https://your-api-domain.com/")
+    .build()
 
-- Ensure sensitive data (e.g., API keys, database credentials) is stored securely.
-- Follow best practices for Django development and deployment.
+val api = retrofit.create(ApiService::class.java)
+val call = api.getConversations()
+
+call.enqueue(object : Callback<List<Conversation>> {
+    override fun onResponse(call: Call<List<Conversation>>, response: Response<List<Conversation>>) {
+        if (response.isSuccessful) {
+            val conversations = response.body()
+            // Update UI
+        }
+    }
+    override fun onFailure(call: Call<List<Conversation>>, t: Throwable) {
+        // Handle error
+    }
+})
+```
+
+---
+
+## **🧪 Testing in Development**
+1. **Mock Data Response**  
+   If the backend is unavailable, mock the response:
+   ```json
+   [{"id": 1, "title": "Test", "is_active": true, "messages": []}]
+   ```
+
+2. **Error Simulation**  
+   Test error handling by temporarily changing the endpoint URL to an invalid path.
+
+---
+
+## **📝 Notes for Developers**
+- **Pagination**: Currently returns all conversations. Contact backend if pagination is needed.
+- **Auto-Refresh**: Poll this endpoint every 60s if real-time updates are required.
+- **Filtering**: Use `?is_active=true` to fetch only ongoing conversations (if implemented).
+
+**Last Updated:** March 2025  
+
+---
+
+**🔗 Backend Contact:** [christineoyiera51@gmail.com](mailto:your-email@domain.com)  
+
+Let me know what you'd like to add:
