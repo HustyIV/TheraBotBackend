@@ -1,7 +1,14 @@
 from rest_framework import serializers
-from .models import chatHistory
+from .models import Conversation, Message
 
-class ChatHistorySerializer(serializers.ModelSerializer):
+class MessageSerializer(serializers.ModelSerializer):
     class Meta:
-        model = chatHistory
-        fields = '__all__'  # Include all fields in the model
+        model = Message
+        fields = ['text', 'is_from_user', 'sent_at']
+
+class ConversationSerializer(serializers.ModelSerializer):
+    messages = MessageSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Conversation
+        fields = ['id', 'created_at', 'title', 'is_active', 'messages']
