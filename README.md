@@ -7,7 +7,7 @@ This guide explains how to integrate with the TheraBot backend API, which provid
 
 ## **📌 Base URL**  
 ```
-https://therabothutsy.onrender.com/ 
+https://therabothutsy.onrender.com/api
 ```  
 
 ---
