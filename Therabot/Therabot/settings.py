@@ -144,7 +144,7 @@ WSGI_APPLICATION = 'Therabot.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': tmpPostgres.path.path[1:],
+        'NAME': tmpPostgres.path[1:],
         'USER': tmpPostgres.username,
         'PASSWORD': tmpPostgres.password,
         'HOST': tmpPostgres.hostname,
