@@ -17,7 +17,7 @@ import dj_database_url
 load_dotenv()
 import os
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-tmpPostgres = urlparse(os.getenv("DB_URL"))
+tmpPostgres = urlparse(os.getenv("DATABASE_URL"))
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -142,14 +142,11 @@ WSGI_APPLICATION = 'Therabot.wsgi.application'
 # Replace the SQLite DATABASES configuration with PostgreSQL:
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': tmpPostgres.path[1:],
-        'USER': tmpPostgres.username,
-        'PASSWORD': tmpPostgres.password,
-        'HOST': tmpPostgres.hostname,
-        'PORT': 5432,
-    }
+    'default': dj_database_url.config(
+        default=os.getenv('DATABASE_URL'),
+        conn_max_age=600,
+        ssl_require=True,
+    )
 }
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
