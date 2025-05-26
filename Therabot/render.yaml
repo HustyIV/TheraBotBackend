@@ -1,3 +1,5 @@
+version: "1"
+
 databases:
   - name: therabotdb
     plan: free
@@ -10,7 +12,7 @@ services:
     name: TheraBotHutsy
     runtime: python
     buildCommand: "./build.sh"
-    startCommand: "python -m gunicorn Therabot.asgi:application -k uvicorn.workers.UvicornWorker"
+    startCommand: "python -m gunicorn Therabot.asgi:application -k uvicorn.workers.UvicornWorker --workers ${WEB_CONCURRENCY} --timeout 120 --keep-alive 5"
     envVars:
       - key: DATABASE_URL
         fromDatabase:
@@ -19,4 +21,8 @@ services:
       - key: SECRET_KEY
         generateValue: true
       - key: WEB_CONCURRENCY
-        value: 4
+        value: 2
+      - key: HF_API_KEY
+        value: your_huggingface_token_here  
+      - key: DJANGO_SETTINGS_MODULE
+        value: Therabot.settings.production 
