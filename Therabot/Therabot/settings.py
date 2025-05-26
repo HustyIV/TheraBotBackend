@@ -66,10 +66,19 @@ MIDDLEWARE = [
 ROOT_URLCONF = 'Therabot.urls'
 
 REST_FRAMEWORK = {
+    'DEFAULT_THROTTLE_RATES': {
+        'user': '100/hour', 
+    },
     'DEFAULT_AUTHENTICATION_CLASSES': [],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny',
     ]
+}
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+    }
 }
 
 from datetime import timedelta
@@ -93,6 +102,34 @@ TEMPLATES = [
         },
     },
 ]
+
+# settings.py
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'INFO',
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
+            'propagate': False,
+        },
+        
+        'api': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': True,
+        }
+    },
+}
 
 WSGI_APPLICATION = 'Therabot.wsgi.application'
 
